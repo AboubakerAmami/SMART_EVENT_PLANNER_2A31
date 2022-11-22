@@ -6,14 +6,13 @@
 #include <QPrinter>
 #include <QDate>
 #include <QTextDocument>
+#include "camera.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-
     /*////////////////////////CONTROLE DE SAISIE///////////////////////////////////*/
     ui->lineEdit_cin->setValidator( new QIntValidator(0, 999999999, this));
     ui->lineEdit_num->setValidator( new QIntValidator(0, 999999999, this));
@@ -23,13 +22,32 @@ MainWindow::MainWindow(QWidget *parent)
     /*/////////////////////////////////////////////////////////////////////////////*/
 
 
-}
 
+}
 MainWindow::~MainWindow()
 {
     delete ui;
 }
-
+void MainWindow::readfile(){
+    QString filename="C:/Users/Pc/Desktop/Proj/Histo/historique.txt";
+    QFile file(filename);
+    if(!file.exists()){
+        qDebug() << "NO existe el archivo "<<filename;
+    }else{
+        qDebug() << filename<<" encontrado...";
+    }
+    QString line;
+    ui->textHisto->clear();
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        QTextStream stream(&file);
+        while (!stream.atEnd()){
+            line = stream.readLine();
+            ui->textHisto->setText(ui->textHisto->toPlainText()+line+"\n");
+            qDebug() << "linea: "<<line;
+        }
+    }
+    file.close();
+}
 
 void MainWindow::on_tabWidget_9_currentChanged(int index)
 {
@@ -37,7 +55,9 @@ void MainWindow::on_tabWidget_9_currentChanged(int index)
     ui->tableView_3->setModel(c.afficherclient());
     ui->comboBox->clear();
      ui->comboBox->addItems(c.recherche_client());
-     c.stat(ui->widget); // c client , stat : function fel classe client , ui->widget
+     c.stat(ui->widget);
+     readfile();
+
 
 
 }
@@ -59,9 +79,23 @@ void MainWindow::on_pushButton_ajouter_2_clicked()
           bool test=C.ajouterclient();
           if(test)
           {
-              QMessageBox::information(nullptr,QObject::tr("Ajouter client"),
-                                                   QObject::tr("client ajouté .\n"
-                                                               "Click Cancel to exit ."),QMessageBox::Cancel);
+              notif m("Client","Client Ajouté");
+              m.afficher();
+
+              /*********************************************************************************************************/
+
+              foreach(QLineEdit* le, findChildren<QLineEdit*>()) {
+                           le->clear();}
+                      QFile file("C:/Users/Pc/Desktop/Proj/Histo/historique.txt");
+                      if(!file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
+                          return;
+                      QTextStream cout(&file);
+                      QString d_info = QDateTime::currentDateTime().toString();
+                      QString message2=" + "+d_info+" Un(e) client(e) a été ajouté sous le nom : "+nom+" " ""+prenom+"\n";
+                      cout << message2;
+              /******************************************************* tri rech mailing pdf **************************************************/
+
+
            }
            else
            {
@@ -88,9 +122,22 @@ void MainWindow::on_pushButton_modifier_2_clicked()
           bool test=c.modifierclient();
                if (test)
                   {
-                   QMessageBox::information(nullptr,QObject::tr("Modifier client"),
-                                                    QObject::tr("client Modifié .\n"
-                                                                "Click Cancel to exit ."),QMessageBox::Cancel);
+                   notif m("Client","Client Modifié");
+                   m.afficher();
+
+                   /*********************************************************************************************************/
+
+                   foreach(QLineEdit* le, findChildren<QLineEdit*>()) {
+                                le->clear();}
+                   QFile file("C:/Users/Pc/Desktop/Proj/Histo/historique.txt");
+                           if(!file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
+                               return;
+                           QTextStream cout(&file);
+                           QString d_info = QDateTime::currentDateTime().toString();
+                           QString message2=" ~ "+d_info+" Un(e) client(e) a été modifié sous l'id : "+cin+"\n";
+                           cout << message2;
+                   /*********************************************************************************************************/
+
 
                    }
                    else
@@ -104,23 +151,39 @@ void MainWindow::on_pushButton_modifier_2_clicked()
 
 void MainWindow::on_pushButton_32_clicked()
 {
-//    QSqlQuery qry;
-//        client c;
+    QSqlQuery qry;
+        client c;
 
 
-//         QVariant id_cc = ui->tableView_3->model()->data(ui->tableView_3->selectionModel()->currentIndex(),Qt::DisplayRole);
-//         QString idc = id_cc.toString();
-//         QMessageBox::StandardButton reply;
-//           reply = QMessageBox::question(this, "Supprimer", "Etes vous sur de supprimer ce client?",
-//                                         QMessageBox::Yes|QMessageBox::No);
-//           if (reply == QMessageBox::Yes) {
-//               bool test=c.supprimerclient(idc);
-//               if(test)
-//               {
-//                   ui->tableView_3->setModel(c.afficherclient());
+         QVariant id_cc = ui->tableView_3->model()->data(ui->tableView_3->selectionModel()->currentIndex(),Qt::DisplayRole);
+         QString idc = id_cc.toString();
+         QMessageBox::StandardButton reply;
+           reply = QMessageBox::question(this, "Supprimer", "Etes vous sur de supprimer ce client?",
+                                         QMessageBox::Yes|QMessageBox::No);
+           if (reply == QMessageBox::Yes) {
+               bool test=c.supprimerclient(idc);
+               if(test)
+               {
+                   notif m("Client","Client Supprimé");
+                   m.afficher();
 
-//               }
-//           }
+                   /*********************************************************************************************************/
+
+                   foreach(QLineEdit* le, findChildren<QLineEdit*>()) {
+                                le->clear();}
+                   QFile file("C:/Users/Pc/Desktop/Proj/Histo/historique.txt");
+                           if(!file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
+                               return;
+                           QTextStream cout(&file);
+                           QString d_info = QDateTime::currentDateTime().toString();
+                           QString message2=" - "+d_info+" Un(e) client(e) a été supprimé sous l'id : "+idc+"\n";
+                           cout << message2;
+                   /*********************************************************************************************************/
+
+                           ui->tableView_3->setModel(c.afficherclient());
+
+               }
+           }
 
 
 }
@@ -140,7 +203,7 @@ void MainWindow::on_pushButton_33_clicked()
     printer.setOutputFileName(fileName);
     const int rowCount = ui->tableView_3->model()->rowCount();
     const int columnCount = ui->tableView_3->model()->columnCount();
-    QString TT = QDate::currentDate().toString("yyyy/MM/dd");//***************************************
+    QString TT = QDate::currentDate().toString("yyyy/MM/dd");
     out <<"<html>\n"
           "<head>\n"
            "<meta Content=\"Text/html; charset=Windows-1251\">\n"
@@ -194,24 +257,16 @@ void MainWindow::on_lineEdit_recherche_2_textEdited(const QString &arg1)
 
 }
 
-void MainWindow::on_deleteButton_clicked()
+void MainWindow::on_pushButton_clicked()
 {
-    QSqlQuery qry;
-        client c;
+    c= new camera();
+    c->show();
 
+}
 
-         QVariant id_cc = ui->tableView_3->model()->data(ui->tableView_3->selectionModel()->currentIndex(),Qt::DisplayRole);
-         QString idc = id_cc.toString();
-         QMessageBox::StandardButton reply;
-           reply = QMessageBox::question(this, "Supprimer", "Etes vous sur de supprimer ce client?",
-                                         QMessageBox::Yes|QMessageBox::No);
-           if (reply == QMessageBox::Yes) {
-               bool test=c.supprimerclient(idc);
-               if(test)
-               {
-                   ui->tableView_3->setModel(c.afficherclient());
-
-               }
-           }
+void MainWindow::on_pushButton_35_clicked()
+{
+    client c;
+    ui->tableView_3->setModel(c.tri_id());
 
 }

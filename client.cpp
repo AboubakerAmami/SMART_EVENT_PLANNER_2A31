@@ -64,7 +64,7 @@ QSqlQueryModel* client::afficherclient()
           model->setHeaderData(2, Qt::Horizontal, QObject::tr("Prenom"));
           model->setHeaderData(3, Qt::Horizontal, QObject::tr("Email"));
           model->setHeaderData(4, Qt::Horizontal, QObject::tr("Telephone"));
-          model->setHeaderData(5, Qt::Horizontal, QObject::tr("Age"));
+          model->setHeaderData(4, Qt::Horizontal, QObject::tr("Age"));
           return model;
 
 }
@@ -111,28 +111,28 @@ void client::stat(QCustomPlot *customPlot)
     fossil->setAntialiased(false);
     fossil->setStackingGap(1);
     // set names and colors:
-    fossil->setName("Clients"); // ***************************************************** nom
+    fossil->setName("Clients");
     fossil->setPen(QPen(QColor(111, 9, 176).lighter(170)));
     fossil->setBrush(QColor(111, 9, 176));
 
     // prepare x axis with country labels:
     QVector<double> ticks;
     QVector<QString> labels;
-    query.prepare("SELECT COUNT(*) FROM CLIENT where AGE between 15 and 18"); //************************
+    query.prepare("SELECT COUNT(*) FROM CLIENT where AGE between 0 and 15");
     query.exec();
     int i;
     while(query.next())
     {
         i=query.value(0).toInt();
     }
-    query.prepare("SELECT COUNT(*) FROM CLIENT where AGE between 18 and 20");//*************************
+    query.prepare("SELECT COUNT(*) FROM CLIENT where AGE between 15 and 20");
     query.exec();
     int j;
     while(query.next())
     {
         j=query.value(0).toInt();
     }
-    query.prepare("SELECT COUNT(*) FROM CLIENT where AGE > 20");//**************************
+    query.prepare("SELECT COUNT(*) FROM CLIENT where AGE > 20");
     query.exec();
     int k;
     while(query.next())
@@ -145,7 +145,7 @@ void client::stat(QCustomPlot *customPlot)
 
 
     ticks << 1 << 2 << 3 ;
-    labels << "[ 15 ,18 ]" << "[ 15 ,20  ]"<<"Plus que 20" ; //************************** affichage des intervales
+    labels << "[ 0 ,15 ]" << "[ 15 ,20  ]"<<"Plus que 20" ;
     QSharedPointer<QCPAxisTickerText> textTicker(new QCPAxisTickerText);
     textTicker->addTicks(ticks, labels);
     customPlot->xAxis->setTicker(textTicker);
@@ -163,7 +163,7 @@ void client::stat(QCustomPlot *customPlot)
     // prepare y axis:
     customPlot->yAxis->setRange(0, 20);
     customPlot->yAxis->setPadding(5); // a bit more space to the left border
-    customPlot->yAxis->setLabel("Intervalle de nombre des clients"); // ********************
+    customPlot->yAxis->setLabel("Intervalle de nombre des clients");
     customPlot->yAxis->setBasePen(QPen(Qt::white));
     customPlot->yAxis->setTickPen(QPen(Qt::white));
     customPlot->yAxis->setSubTickPen(QPen(Qt::white));
@@ -175,7 +175,7 @@ void client::stat(QCustomPlot *customPlot)
 
     // Add data:
     QVector<double> fossilData, nuclearData, regenData;
-    fossilData  << i << j << k;//*******************************************
+    fossilData  << i << j << k;
     regenData   << 0.06*10.5 << 0.05*5.5 << 0.04*5.5 << 0.06*5.8 << 0.02*5.2 << 0.07*4.2 << 0.25*11.2;
     fossil->setData(ticks, fossilData);
 
@@ -201,7 +201,22 @@ QSqlQueryModel* client::tri()
     model->setHeaderData(2, Qt::Horizontal, QObject::tr("Prenom"));
     model->setHeaderData(3, Qt::Horizontal, QObject::tr("Email"));
     model->setHeaderData(4, Qt::Horizontal, QObject::tr("Telephone"));
-    model->setHeaderData(5, Qt::Horizontal, QObject::tr("Age"));
+    model->setHeaderData(4, Qt::Horizontal, QObject::tr("Age"));
+          return model;
+
+}
+QSqlQueryModel* client::tri_id()
+{
+
+    QSqlQueryModel* model=new QSqlQueryModel();
+
+    model->setQuery("SELECT * FROM CLIENT ORDER BY ID_CLIENT;");
+    model->setHeaderData(0, Qt::Horizontal, QObject::tr("ID Client"));
+    model->setHeaderData(1, Qt::Horizontal, QObject::tr("Nom"));
+    model->setHeaderData(2, Qt::Horizontal, QObject::tr("Prenom"));
+    model->setHeaderData(3, Qt::Horizontal, QObject::tr("Email"));
+    model->setHeaderData(4, Qt::Horizontal, QObject::tr("Telephone"));
+    model->setHeaderData(4, Qt::Horizontal, QObject::tr("Age"));
           return model;
 
 }
@@ -218,7 +233,7 @@ QSqlQueryModel * client::rechercher(QString a)
     model->setHeaderData(2, Qt::Horizontal, QObject::tr("Prenom"));
     model->setHeaderData(3, Qt::Horizontal, QObject::tr("Email"));
     model->setHeaderData(4, Qt::Horizontal, QObject::tr("Telephone"));
-    model->setHeaderData(5, Qt::Horizontal, QObject::tr("Age"));
+    model->setHeaderData(4, Qt::Horizontal, QObject::tr("Age"));
     return model;
 }
 

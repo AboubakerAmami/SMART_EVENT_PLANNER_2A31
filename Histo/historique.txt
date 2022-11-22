@@ -1,0 +1,14 @@
+
+######################### H I S T O R I Q U E #########################
+
+ + mar. nov. 15 00:00:48 2022 Un(e) client(e) a été ajouté sous le nom : Wael Ksila
+ ~ mar. nov. 15 00:03:18 2022 Un(e) client(e) a été modifié sous l'id : 09865026
+ - mar. nov. 15 00:03:34 2022 Un(e) client(e) a été supprimé sous l'id : 15
+ - mar. nov. 15 23:13:32 2022 Un(e) client(e) a été supprimé sous l'id : 10
+ + mar. nov. 15 23:13:50 2022 Un(e) client(e) a été ajouté sous le nom :  
+ ~ mar. nov. 15 23:14:04 2022 Un(e) client(e) a été modifié sous l'id : 09865025
+ - mer. nov. 16 01:30:29 2022 Un(e) client(e) a été supprimé sous l'id : 1497
+ - mer. nov. 16 01:30:33 2022 Un(e) client(e) a été supprimé sous l'id : 09865025
+ - mer. nov. 16 01:30:49 2022 Un(e) client(e) a été supprimé sous l'id : 1515
+ - mer. nov. 16 01:30:52 2022 Un(e) client(e) a été supprimé sous l'id : 25
+ - mer. nov. 16 01:30:56 2022 Un(e) client(e) a été supprimé sous l'id : 15996

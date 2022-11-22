@@ -15,7 +15,7 @@ if (db.open())
 test=true;
 
 
-// test github push
+
 
 
     return  test;

@@ -37,6 +37,7 @@ public:
 
     void stat(QCustomPlot *customPlot);
     QSqlQueryModel * tri();
+    QSqlQueryModel * tri_id();
     QSqlQueryModel * rechercher(QString);
 
 
