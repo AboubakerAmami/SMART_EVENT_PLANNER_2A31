@@ -5,15 +5,12 @@ Connection::Connection()
 
 }
 
-bool Connection::createconnection()
-
-{
-    db = QSqlDatabase::addDatabase("QODBC");
-    bool test=false;
-
-    db.setDatabaseName("Source_Projet2A");
-    db.setUserName("system");//inserer nom de l'utilisateur
-    db.setPassword("54224709");//inserer mot de passe de cet utilisateur
+bool Connection::createconnect()
+{bool test=false;
+QSqlDatabase db = QSqlDatabase::addDatabase("QODBC");
+db.setDatabaseName("test");
+db.setUserName("system");//system
+db.setPassword("SYSTEM");//SYSTEM
 
 if (db.open())
 test=true;
@@ -24,4 +21,5 @@ test=true;
 
     return  test;
 }
-void Connection::createConnection(){db.close();}
+
+
